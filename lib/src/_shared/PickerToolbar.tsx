@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Toolbar, { ToolbarProps } from '@material-ui/core/Toolbar';
+import Toolbar, { ToolbarProps, ToolbarTypeMap } from '@material-ui/core/Toolbar';
 import { ExtendMui } from '../typings/helpers';
-import { PenIcon } from '../_shared/icons/PenIcon';
+import { PenIcon } from './icons/PenIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { ToolbarComponentProps } from '../Picker/Picker';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 
 export const useStyles = makeStyles(
   theme => {
@@ -62,53 +63,59 @@ function defaultGetKeyboardInputSwitchingButtonText(isKeyboardInputOpen: boolean
     : 'calendar view is open, go to text input view';
 }
 
-const PickerToolbar: React.SFC<PickerToolbarProps> = ({
-  children,
-  isLandscape,
-  toolbarTitle,
-  landscapeDirection = 'column',
-  className = null,
-  penIconClassName,
-  toggleMobileKeyboardView,
-  isMobileKeyboardViewOpen,
-  getMobileKeyboardInputViewButtonText = defaultGetKeyboardInputSwitchingButtonText,
-  ...other
-}) => {
-  const classes = useStyles();
+const PickerToolbar = React.forwardRef<DefaultComponentProps<ToolbarTypeMap>, PickerToolbarProps>(
+  (
+    {
+      children,
+      isLandscape,
+      toolbarTitle,
+      landscapeDirection = 'column',
+      className = null,
+      penIconClassName,
+      toggleMobileKeyboardView,
+      isMobileKeyboardViewOpen,
+      getMobileKeyboardInputViewButtonText = defaultGetKeyboardInputSwitchingButtonText,
+      ...other
+    },
+    ref
+  ) => {
+    const classes = useStyles();
 
-  return (
-    <Toolbar
-      data-mui-test="picker-toolbar"
-      className={clsx(classes.toolbar, { [classes.toolbarLandscape]: isLandscape }, className)}
-      {...other}
-    >
-      <Typography data-mui-test="picker-toolbar-title" color="inherit" variant="overline">
-        {toolbarTitle}
-      </Typography>
-      <Grid
-        container
-        justify="space-between"
-        className={classes.dateTitleContainer}
-        direction={isLandscape ? landscapeDirection : 'row'}
-        alignItems={isLandscape ? 'flex-start' : 'flex-end'}
+    return (
+      <Toolbar
+        ref={ref}
+        data-mui-test="picker-toolbar"
+        className={clsx(classes.toolbar, { [classes.toolbarLandscape]: isLandscape }, className)}
+        {...other}
       >
-        {children}
-        <IconButton
-          onClick={toggleMobileKeyboardView}
-          className={penIconClassName}
-          color="inherit"
-          data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={getMobileKeyboardInputViewButtonText(isMobileKeyboardViewOpen)}
+        <Typography data-mui-test="picker-toolbar-title" color="inherit" variant="overline">
+          {toolbarTitle}
+        </Typography>
+        <Grid
+          container
+          justify="space-between"
+          className={classes.dateTitleContainer}
+          direction={isLandscape ? landscapeDirection : 'row'}
+          alignItems={isLandscape ? 'flex-start' : 'flex-end'}
         >
-          {isMobileKeyboardViewOpen ? (
-            <CalendarIcon color="inherit" />
-          ) : (
-            <PenIcon color="inherit" />
-          )}
-        </IconButton>
-      </Grid>
-    </Toolbar>
-  );
-};
+          {children}
+          <IconButton
+            onClick={toggleMobileKeyboardView}
+            className={penIconClassName}
+            color="inherit"
+            data-mui-test="toggle-mobile-keyboard-view"
+            aria-label={getMobileKeyboardInputViewButtonText(isMobileKeyboardViewOpen)}
+          >
+            {isMobileKeyboardViewOpen ? (
+              <CalendarIcon color="inherit" />
+            ) : (
+              <PenIcon color="inherit" />
+            )}
+          </IconButton>
+        </Grid>
+      </Toolbar>
+    );
+  }
+);
 
 export default PickerToolbar;
