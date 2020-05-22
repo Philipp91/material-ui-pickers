@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@material-ui/pickers';
 import { UtilsContext } from '../_shared/UtilsServiceContext';
 import { NotificationManager } from 'utils/NotificationManager';
 import { createUtilsService, UtilsLib, utilsMap } from '../utils/utilsService';
+import DateFnsLocaleDe from 'date-fns/locale/de';
 import {
   Theme,
   createMuiTheme,
@@ -105,7 +106,7 @@ export const PageWithContexts: React.SFC<Props> = ({
     >
       <ThemeProvider theme={muiTheme}>
         <SnackbarProvider maxSnack={3}>
-          <LocalizationProvider dateAdapter={utilsMap[lib]}>
+          <LocalizationProvider dateAdapter={utilsMap[lib]} locale={DateFnsLocaleDe}>
             <ThemeContext.Provider value={theme}>
               <UtilsContext.Provider value={createUtilsService(lib)}>
                 <CssBaseline />

@@ -11,6 +11,7 @@ function BasicDateTimePicker() {
         label="DateTimePicker"
         value={selectedDate}
         onChange={handleDateChange}
+        mask="__.__.____ __:__"
       />
     </Fragment>
   );
